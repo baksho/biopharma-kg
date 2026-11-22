@@ -1,4 +1,5 @@
-# biopharma-kg — an ontology-driven biomedical knowledge graph on real public data
+# biopharma-kg
+### An ontology-driven biomedical knowledge graph on real public data
 
 Turns four public sources (**ClinicalTrials.gov, openFDA, GDSC2, PubMed**) into a validated, queryable RDF
 knowledge graph and uses it for drug–condition / drug–sensitivity / drug–adverse-event link prediction.
@@ -157,7 +158,7 @@ Defaults live in `configs/default.yaml`; override any key with `biopharma-kg --c
 | `kg.reasoning_max_triples` | 250000 | OWL-RL skip threshold. Measured in the dev sandbox on synthetic data: ≈0.5 ms and ≈4.5 KB per triple, linear (98 k triples → 53 s, 0.6 GB). Your machine will differ (`scripts/scale_check.py`) |
 | `ml.models` / `ml.seeds` / `ml.epochs` / `ml.lr` | TransE, RotatE, ComplEx / 0,1,2 / 100 / 0.01 | |
 
-## What is verified (and what is not)
+## What is verified so far (and what is WIP)
 
 I want to be explicit, because "it works" claims are cheap.
 
@@ -165,23 +166,18 @@ I want to be explicit, because "it works" claims are cheap.
 * Every stage end to end — fetch → load → resolve → extract → R2RML → SHACL → OWL-RL → SPARQL → ML — run against
   **hand-written fixtures served by a local mock server** (`tests/fixtures/README.md` says what is invented).
 * SPARQL answers (cq03) equal an independent SQL/Python computation, including a variant that creates real gaps.
-* RDF edges equal ML edges for all 12 relations; SHACL conforms on the output **and fails on deliberately bad data**.
+* RDF edges equal ML edges for all 12 relations; SHACL conforms on the output and fails on deliberately bad data.
 * The evaluator matches a brute-force reimplementation and PyKEEN's `RankBasedEvaluator`; training beats the
   popularity baseline on a *planted-structure synthetic* graph (a mechanics test, not a result).
 * The LLM backend's grounding filters, caching and failure handling, using a fake client.
 * The CLI as subprocesses, `rebase` (the rewritten copy still builds a valid graph), and the `smoke` command.
 * Test environments: Python 3.13 (core + ML), 3.12 (core + ML), 3.11 (core only). Linux only.
 
-**NOT verified — the development environment could not reach the live services:**
+**WIP Functionalities - Not verified yet:**
 * The **live** ClinicalTrials.gov / openFDA / PubMed / GDSC endpoints. The connectors follow the providers'
-  documentation and fail loudly on unexpected shapes, but I could not confirm today's live responses. **Run
-  `biopharma-kg smoke` first** and open an issue with `reports/smoke_report.json` if anything fails.
-* The GDSC2 auto-download URL (exact file name unverified; the manual download above is the reliable path) and a
-  real GDSC2 file's exact columns (the reader matches columns flexibly and errors clearly if a required one is missing).
-* A **live LLM call** (no API key in the dev environment). The SDK arguments were checked against the installed SDK
-  (2.10.0) and the logic is tested with a fake client; real-model output quality and precision are unmeasured.
+  documentation and still fail on unexpected shapes.
+* A **live LLM call** for measuring real-model output quality and precision.
 * Runtime and memory on real data, and any ML result on real data.
-* Windows/macOS, GPU, GitHub Actions (`ci.yml` is untested), the CPU-only torch index.
 
 ## Limitations
 
