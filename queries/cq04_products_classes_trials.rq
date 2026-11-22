@@ -1,0 +1,14 @@
+# title: Marketed products, pharmacologic classes and trial counts per drug
+# question: For each drug with an NDC product, what are its pharmacologic classes, how many NDC products does it have, and how many registered trials?
+# inference: none
+SELECT ?drugLabel (COUNT(DISTINCT ?product) AS ?ndcProducts) (COUNT(DISTINCT ?trial) AS ?trials)
+       (GROUP_CONCAT(DISTINCT ?classLabel; separator=" | ") AS ?pharmClasses)
+WHERE {
+  ?product bp:productOf ?drug .
+  ?drug rdfs:label ?drugLabel .
+  OPTIONAL { ?drug bp:hasPharmClass ?class . ?class rdfs:label ?classLabel }
+  OPTIONAL { ?trial bp:investigatesDrug ?drug }
+}
+GROUP BY ?drugLabel
+ORDER BY DESC(?trials) ?drugLabel
+LIMIT 200

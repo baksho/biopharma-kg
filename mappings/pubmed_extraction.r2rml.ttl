@@ -1,0 +1,79 @@
+# PubMed publications and literature-extracted assertions, with provenance (PROV-O).
+# Graphs: <.../graph/pubmed> (publications), <.../graph/extraction> (assertions + direct edges)
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/pubmed#> .
+
+map:Publication a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT pmid, title, pub_year FROM pubmed_article" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/publication/pmid{pmid}" ; rr:class bp:Publication ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/pubmed> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:pmid ; rr:objectMap [ rr:column "pmid" ] ] ;
+  rr:predicateObjectMap [ rr:predicate dct:title ; rr:objectMap [ rr:column "title" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:pubYear ; rr:objectMap [ rr:column "pub_year" ; rr:datatype xsd:integer ] ] .
+
+map:Extractor a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT DISTINCT extractor, COALESCE(model, '') AS model FROM extracted_relation" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/extractor/{extractor}" ; rr:class bp:Extractor ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "extractor" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:model ; rr:objectMap [ rr:column "model" ] ] .
+
+map:Assertion a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT rel_id, pmid, drug_key, predicate AS assertion_predicate, object_text, confidence, evidence, extractor
+                                   FROM extracted_relation""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/assertion/{rel_id}" ; rr:class bp:ExtractedAssertion ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:assertionSubject ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:assertionPredicate ; rr:objectMap [ rr:column "assertion_predicate" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:assertionObjectText ; rr:objectMap [ rr:column "object_text" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:evidenceText ; rr:objectMap [ rr:column "evidence" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:confidence ; rr:objectMap [ rr:column "confidence" ; rr:datatype xsd:decimal ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:derivedFromPublication ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/publication/pmid{pmid}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:extractedBy ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/extractor/{extractor}" ] ] .
+
+# Linked objects of assertions (one map per object kind so the IRI template matches the entity type).
+map:AssertionObjectCondition a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT rel_id, object_key FROM extracted_relation WHERE object_kind='condition' AND object_key IS NOT NULL" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/assertion/{rel_id}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:assertionObject ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/condition/{object_key}" ] ] .
+map:AssertionObjectAE a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT rel_id, object_key FROM extracted_relation WHERE object_kind='adverse_event' AND object_key IS NOT NULL" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/assertion/{rel_id}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:assertionObject ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/ae/{object_key}" ] ] .
+map:AssertionObjectTarget a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT rel_id, object_key FROM extracted_relation WHERE object_kind='target' AND object_key IS NOT NULL" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/assertion/{rel_id}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:assertionObject ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/target/{object_key}" ] ] .
+
+# Direct drug -> object edges (only for objects that were linked to a known entity).
+map:ExtractedTreats a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT DISTINCT drug_key, object_key FROM v_drug_extracted WHERE predicate='treats'" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:extractedTreats ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/condition/{object_key}" ] ] .
+map:ExtractedAdverse a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT DISTINCT drug_key, object_key FROM v_drug_extracted WHERE predicate='adverse_effect'" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:extractedAdverseEffect ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/ae/{object_key}" ] ] .
+map:ExtractedInhibits a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT DISTINCT drug_key, object_key FROM v_drug_extracted WHERE predicate='inhibits'" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/extraction> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:extractedInhibits ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/target/{object_key}" ] ] .

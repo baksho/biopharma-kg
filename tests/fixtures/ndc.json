@@ -1,0 +1,62 @@
+{
+ "erlotinib": [
+  {
+   "product_ndc": "50242-062",
+   "generic_name": "ERLOTINIB HYDROCHLORIDE",
+   "brand_name": "TARCEVA",
+   "dosage_form": "TABLET",
+   "route": [
+    "ORAL"
+   ],
+   "marketing_category": "NDA",
+   "pharm_class": [
+    "Kinase Inhibitor [EPC]",
+    "Protein Kinase Inhibitors [MoA]"
+   ],
+   "active_ingredients": [
+    {
+     "name": "ERLOTINIB HYDROCHLORIDE",
+     "strength": "150 mg/1"
+    }
+   ],
+   "openfda": {
+    "manufacturer_name": [
+     "Genentech, Inc."
+    ]
+   }
+  },
+  {
+   "product_ndc": "00000-0000",
+   "generic_name": "SOMETHING ELSE",
+   "brand_name": "OTHER",
+   "pharm_class": [],
+   "active_ingredients": [
+    {
+     "name": "SOMETHING ELSE"
+    }
+   ]
+  }
+ ],
+ "gefitinib": [
+  {
+   "product_ndc": "0310-0482",
+   "generic_name": "GEFITINIB",
+   "brand_name": "IRESSA",
+   "dosage_form": "TABLET",
+   "route": [
+    "ORAL"
+   ],
+   "pharm_class": [
+    "Kinase Inhibitor [EPC]"
+   ],
+   "active_ingredients": [
+    {
+     "name": "GEFITINIB",
+     "strength": "250 mg/1"
+    }
+   ],
+   "labeler_name": "AstraZeneca Pharmaceuticals LP"
+  }
+ ],
+ "cisplatin": null
+}

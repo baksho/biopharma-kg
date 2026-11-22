@@ -1,0 +1,37 @@
+COSMIC_ID,CELL_LINE_NAME,DRUG_ID,DRUG_NAME,PUTATIVE_TARGET,PATHWAY_NAME,TCGA_DESC,LN_IC50,AUC,Z_SCORE
+900001,MCF7,1001,Erlotinib,EGFR,EGFR signaling,BRCA,-0.9,0.5,-1.0
+900002,A549,1001,Erlotinib,EGFR,EGFR signaling,LUAD,-0.3,0.53,-0.82
+900003,NCIH520,1001,Erlotinib,EGFR,EGFR signaling,LUSC,0.3,0.56,-0.64
+900004,HT29,1001,Erlotinib,EGFR,EGFR signaling,COAD/READ,0.9,0.59,-0.46
+900005,786O,1001,Erlotinib,EGFR,EGFR signaling,KIRC,1.5,0.62,-0.28
+900006,U251,1001,Erlotinib,EGFR,EGFR signaling,GBM,2.1,0.65,-0.1
+900007,K562,1001,Erlotinib,EGFR,EGFR signaling,LCML,2.7,0.68,0.08
+900008,HL60,1001,Erlotinib,EGFR,EGFR signaling,LAML,3.3,0.71,0.26
+900009,PC3,1001,Erlotinib,EGFR,EGFR signaling,PRAD,3.9,0.74,0.44
+900010,A375,1001,Erlotinib,EGFR,EGFR signaling,SKCM,4.5,0.77,0.62
+900011,SKOV3,1001,Erlotinib,EGFR,EGFR signaling,OV,5.1,0.8,0.8
+900012,PANC1,1001,Erlotinib,EGFR,EGFR signaling,PAAD,5.7,0.83,0.98
+900001,MCF7,1002,Gefitinib,EGFR,EGFR signaling,BRCA,-0.8,0.5,-1.0
+900002,A549,1002,Gefitinib,EGFR,EGFR signaling,LUAD,-0.2,0.53,-0.82
+900003,NCIH520,1002,Gefitinib,EGFR,EGFR signaling,LUSC,0.4,0.56,-0.64
+900004,HT29,1002,Gefitinib,EGFR,EGFR signaling,COAD/READ,1.0,0.59,-0.46
+900005,786O,1002,Gefitinib,EGFR,EGFR signaling,KIRC,1.6,0.62,-0.28
+900006,U251,1002,Gefitinib,EGFR,EGFR signaling,GBM,2.2,0.65,-0.1
+900007,K562,1002,Gefitinib,EGFR,EGFR signaling,LCML,2.8,0.68,0.08
+900008,HL60,1002,Gefitinib,EGFR,EGFR signaling,LAML,3.4,0.71,0.26
+900009,PC3,1002,Gefitinib,EGFR,EGFR signaling,PRAD,4.0,0.74,0.44
+900010,A375,1002,Gefitinib,EGFR,EGFR signaling,SKCM,4.6,0.77,0.62
+900011,SKOV3,1002,Gefitinib,EGFR,EGFR signaling,OV,5.2,0.8,0.8
+900012,PANC1,1002,Gefitinib,EGFR,EGFR signaling,PAAD,5.8,0.83,0.98
+900001,MCF7,1003,Cisplatin,DNA crosslinker,DNA replication,BRCA,-0.7,0.5,-1.0
+900002,A549,1003,Cisplatin,DNA crosslinker,DNA replication,LUAD,-0.1,0.53,-0.82
+900003,NCIH520,1003,Cisplatin,DNA crosslinker,DNA replication,LUSC,0.5,0.56,-0.64
+900004,HT29,1003,Cisplatin,DNA crosslinker,DNA replication,COAD/READ,1.1,0.59,-0.46
+900005,786O,1003,Cisplatin,DNA crosslinker,DNA replication,KIRC,1.7,0.62,-0.28
+900006,U251,1003,Cisplatin,DNA crosslinker,DNA replication,GBM,2.3,0.65,-0.1
+900007,K562,1003,Cisplatin,DNA crosslinker,DNA replication,LCML,2.9,0.68,0.08
+900008,HL60,1003,Cisplatin,DNA crosslinker,DNA replication,LAML,3.5,0.71,0.26
+900009,PC3,1003,Cisplatin,DNA crosslinker,DNA replication,PRAD,4.1,0.74,0.44
+900010,A375,1003,Cisplatin,DNA crosslinker,DNA replication,SKCM,4.7,0.77,0.62
+900011,SKOV3,1003,Cisplatin,DNA crosslinker,DNA replication,OV,5.3,0.8,0.8
+900012,PANC1,1003,Cisplatin,DNA crosslinker,DNA replication,PAAD,5.9,0.83,0.98

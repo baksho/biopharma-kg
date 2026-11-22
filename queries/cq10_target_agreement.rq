@@ -1,0 +1,12 @@
+# title: Literature vs GDSC targets
+# question: For which drugs does the literature (extracted 'inhibits') name a target that also appears among the GDSC putative targets, and which extracted targets are NOT in GDSC's list?
+# inference: none
+SELECT ?drugLabel ?targetLabel (BOUND(?gdscSame) AS ?alsoInGdsc)
+WHERE {
+  ?drug bp:extractedInhibits ?target .
+  ?drug rdfs:label ?drugLabel .
+  ?target rdfs:label ?targetLabel .
+  OPTIONAL { ?drug bp:hasTarget ?gdscSame . FILTER(?gdscSame = ?target) }
+}
+ORDER BY ?drugLabel ?targetLabel
+LIMIT 500

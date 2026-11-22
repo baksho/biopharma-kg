@@ -1,0 +1,15 @@
+# title: Extraction provenance overview
+# question: Per extractor/model: how many assertions, over how many publications, with what mean self-reported confidence (if any)?
+# inference: none
+SELECT ?extractorLabel ?model (COUNT(DISTINCT ?assertion) AS ?assertions) (COUNT(DISTINCT ?pub) AS ?publications)
+       (AVG(?conf) AS ?meanConfidence)
+WHERE {
+  ?assertion a bp:ExtractedAssertion ;
+             bp:extractedBy ?extractor ;
+             bp:derivedFromPublication ?pub .
+  ?extractor rdfs:label ?extractorLabel .
+  OPTIONAL { ?extractor bp:model ?model }
+  OPTIONAL { ?assertion bp:confidence ?conf }
+}
+GROUP BY ?extractorLabel ?model
+ORDER BY DESC(?assertions)

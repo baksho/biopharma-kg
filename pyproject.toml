@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biopharma-kg"
+version = "0.1.0"
+description = "Ontology-driven biomedical knowledge graph (ClinicalTrials.gov, openFDA, GDSC2, PubMed) with SHACL validation, OWL-RL reasoning, SPARQL and graph-ML link prediction."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    # Versions below are the exact set that was resolved and tested together
+    # (rdflib / pyshacl / owlrl / morph-kgc constrain each other tightly).
+    "rdflib==7.2.1",
+    "pyshacl==0.31.0",
+    "owlrl==7.1.4",
+    "morph-kgc[sqlite]==2.10.0",   # [sqlite] pulls SQLAlchemy, which morph-kgc needs to read our SQLite DB
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "requests>=2.31",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+# Graph ML stage. Install a CPU build of torch first if you do not want the
+# large CUDA wheels:  pip install torch --index-url https://download.pytorch.org/whl/cpu
+ml = [
+    "torch>=2.2",
+    "torch_geometric>=2.5",
+    "pykeen>=1.10",
+]
+llm = ["anthropic>=2.10,<3"]   # tested with 2.10.0
+dev = ["pytest>=8"]
+
+[project.scripts]
+biopharma-kg = "biopharma_kg.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+biopharma_kg = ["resources/*.csv"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "ml: tests that need the optional ML dependencies",
+]

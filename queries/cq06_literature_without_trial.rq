@@ -1,0 +1,17 @@
+# title: Literature-extracted drug-condition links without a registered trial
+# question: Which drug-condition links are asserted in PubMed abstracts (by any extractor) but have no trial registration linking that drug to that condition?
+# inference: none
+SELECT ?drugLabel ?condLabel (COUNT(DISTINCT ?assertion) AS ?assertions) (SAMPLE(?evidence) AS ?exampleEvidence)
+WHERE {
+  ?drug bp:extractedTreats ?cond .
+  ?assertion a bp:ExtractedAssertion ;
+             bp:assertionSubject ?drug ;
+             bp:assertionObject ?cond ;
+             bp:evidenceText ?evidence .
+  FILTER NOT EXISTS { ?drug bp:investigatedFor ?cond }
+  ?drug rdfs:label ?drugLabel .
+  ?cond rdfs:label ?condLabel .
+}
+GROUP BY ?drugLabel ?condLabel
+ORDER BY DESC(?assertions)
+LIMIT 200

@@ -1,0 +1,23 @@
+# GDSC2: cell lines, their cancer type, and the per-drug "sensitive in" edges. Graph: <.../graph/gdsc>
+# (Per-row dose-response nodes live in gdsc_responses.r2rml.ttl and are optional.)
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/gdsc#> .
+
+map:CellLine a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT cell_line_key, name, cosmic_id, cancer_type_code FROM cell_line" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/cellline/{cell_line_key}" ; rr:class bp:CellLine ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/gdsc> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "name" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:cosmicId ; rr:objectMap [ rr:column "cosmic_id" ; rr:datatype xsd:integer ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:cellLineOfType ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/cancertype/{cancer_type_code}" ] ] .
+
+map:Sensitive a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "v_drug_sensitive_cell_line" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/gdsc> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:sensitiveIn ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/cellline/{cell_line_key}" ] ] .

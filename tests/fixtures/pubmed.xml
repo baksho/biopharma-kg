@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<PubmedArticleSet>
+<PubmedArticle><MedlineCitation><PMID Version="1">111</PMID><Article><Journal><JournalIssue><PubDate><Year>2010</Year></PubDate></JournalIssue></Journal>
+<ArticleTitle>Erlotinib treatment in non-small cell lung cancer.</ArticleTitle>
+<Abstract><AbstractText Label="RESULTS">Erlotinib was effective in the treatment of non-small cell lung cancer patients. Rash was a common adverse effect of erlotinib. Erlotinib inhibits EGFR signalling in <i>vitro</i>.</AbstractText></Abstract></Article></MedlineCitation></PubmedArticle>
+<PubmedArticle><MedlineCitation><PMID Version="1">222</PMID><Article><Journal><JournalIssue><PubDate><MedlineDate>2019 Jan-Feb</MedlineDate></PubDate></JournalIssue></Journal>
+<ArticleTitle>Gefitinib did not improve survival in breast cancer.</ArticleTitle>
+<Abstract><AbstractText>Gefitinib did not improve survival in breast cancer patients.</AbstractText></Abstract></Article></MedlineCitation></PubmedArticle>
+<PubmedArticle><MedlineCitation><PMID Version="1">333</PMID><Article><ArticleTitle>No abstract here</ArticleTitle></Article></MedlineCitation></PubmedArticle>
+</PubmedArticleSet>

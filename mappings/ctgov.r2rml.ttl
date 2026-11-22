@@ -1,0 +1,49 @@
+# ClinicalTrials.gov: trials that were linked to at least one canonical drug. Graph: <.../graph/ctgov>
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/ctgov#> .
+
+map:Trial a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT nct_id, title, overall_status, start_date, phase, org_key FROM trial
+                                   WHERE nct_id IN (SELECT nct_id FROM trial_drug)""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/trial/{nct_id}" ; rr:class bp:ClinicalTrial ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/ctgov> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:nctId ; rr:objectMap [ rr:column "nct_id" ] ] ;
+  rr:predicateObjectMap [ rr:predicate dct:title ; rr:objectMap [ rr:column "title" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:overallStatus ; rr:objectMap [ rr:column "overall_status" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:startDate ; rr:objectMap [ rr:column "start_date" ; rr:datatype xsd:date ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:phase ; rr:objectMap [ rr:column "phase" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:sponsoredBy ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/org/{org_key}" ] ] .
+
+map:TrialDrug a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT nct_id, drug_key FROM trial_drug" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/trial/{nct_id}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/ctgov> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:investigatesDrug ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ] ] .
+
+map:TrialCondition a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT nct_id, condition_key FROM trial_condition
+                                   WHERE nct_id IN (SELECT nct_id FROM trial_drug)""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/trial/{nct_id}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/ctgov> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:studiesCondition ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/condition/{condition_key}" ] ] .
+
+# Collapsed drug-level edges (the same views are read by the ML exporter).
+map:DrugCondition a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "v_drug_condition" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/ctgov> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:investigatedFor ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/condition/{condition_key}" ] ] .
+
+map:DrugOrg a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "v_drug_org" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/ctgov> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:investigatedBy ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/org/{org_key}" ] ] .

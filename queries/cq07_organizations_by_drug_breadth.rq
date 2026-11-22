@@ -1,0 +1,12 @@
+# title: Organizations by breadth of investigated drugs
+# question: Which (normalised) organizations investigate the largest number of distinct drugs, and in how many distinct conditions?
+# inference: none
+SELECT ?orgLabel (COUNT(DISTINCT ?drug) AS ?drugs) (COUNT(DISTINCT ?cond) AS ?conditions)
+WHERE {
+  ?drug bp:investigatedBy ?org .
+  ?org rdfs:label ?orgLabel .
+  OPTIONAL { ?drug bp:investigatedFor ?cond }
+}
+GROUP BY ?orgLabel
+ORDER BY DESC(?drugs) ?orgLabel
+LIMIT 100

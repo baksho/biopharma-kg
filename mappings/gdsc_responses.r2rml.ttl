@@ -1,0 +1,19 @@
+# OPTIONAL (config gdsc.materialize_all_responses: true). One node per fitted dose-response row.
+# GDSC2 has hundreds of thousands of rows; expect a graph of >1M triples and much higher memory use.
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/gdsc_responses#> .
+
+map:Response a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT rowid AS rid, drug_key, cell_line_key, ln_ic50, auc, z_score
+                                   FROM gdsc_response WHERE drug_key <> ''""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/response/{rid}" ; rr:class bp:DoseResponse ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/gdsc> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:responseDrug ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:responseCellLine ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/cellline/{cell_line_key}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:lnIC50 ; rr:objectMap [ rr:column "ln_ic50" ; rr:datatype xsd:decimal ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:auc ; rr:objectMap [ rr:column "auc" ; rr:datatype xsd:decimal ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:zScore ; rr:objectMap [ rr:column "z_score" ; rr:datatype xsd:decimal ] ] .

@@ -1,0 +1,33 @@
+# One drug (generic) name per line. Lines starting with # are ignored.
+# Used when no GDSC2 file is available, and always merged in as extra seeds if listed.
+# These are plain oncology drug names, nothing else: all records about them are fetched live.
+cisplatin
+carboplatin
+oxaliplatin
+paclitaxel
+docetaxel
+gemcitabine
+doxorubicin
+fluorouracil
+irinotecan
+methotrexate
+etoposide
+vinorelbine
+temozolomide
+erlotinib
+gefitinib
+lapatinib
+imatinib
+dasatinib
+nilotinib
+sorafenib
+sunitinib
+bortezomib
+vorinostat
+olaparib
+palbociclib
+everolimus
+tamoxifen
+crizotinib
+cetuximab
+bevacizumab

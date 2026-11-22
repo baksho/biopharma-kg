@@ -1,0 +1,13 @@
+# title: Sponsors of trials for drugs with GDSC2 sensitivity data
+# question: Which organizations sponsor registered trials of drugs that also have drug-sensitivity data in GDSC2, and how many trials/drugs each?
+# inference: none
+SELECT ?orgLabel (COUNT(DISTINCT ?trial) AS ?trials) (COUNT(DISTINCT ?drug) AS ?drugs)
+WHERE {
+  ?drug bp:sensitiveIn ?cellLine .
+  ?trial bp:investigatesDrug ?drug ;
+         bp:sponsoredBy ?org .
+  ?org rdfs:label ?orgLabel .
+}
+GROUP BY ?orgLabel
+ORDER BY DESC(?trials) ?orgLabel
+LIMIT 100

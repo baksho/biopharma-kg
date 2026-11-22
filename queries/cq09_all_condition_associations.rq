@@ -1,0 +1,7 @@
+# title: All drug-condition associations (registry + literature)
+# question: How many distinct drug-condition associations exist when registry-based (investigatedFor) and literature-based (extractedTreats) links are treated uniformly?
+# inference: compare
+# Uses the super-property bp:associatedWithCondition, which is never asserted: it only exists after
+# OWL-RL materialisation (rdfs:subPropertyOf). Without inference this query returns no rows.
+SELECT (COUNT(*) AS ?associations)
+WHERE { ?drug bp:associatedWithCondition ?cond }

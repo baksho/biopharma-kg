@@ -1,0 +1,143 @@
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<https://biopharma-kg.example/ns>
+    a owl:Ontology ;
+    dct:title "Biopharma knowledge graph ontology"@en ;
+    dct:description """Application ontology integrating clinical trials (ClinicalTrials.gov), drug products and
+adverse-event report counts (openFDA), drug sensitivity screens (GDSC2) and literature-extracted assertions (PubMed).
+Designed to be OWL 2 RL friendly (no cardinality / union class expressions) so that it can be materialised with
+the owlrl reasoner. Reuses PROV-O for provenance and Dublin Core for titles. The namespace is a placeholder."""@en ;
+    owl:versionInfo "0.1.0" .
+
+# =============================================================== classes
+bp:Drug a owl:Class ; rdfs:label "Drug"@en ;
+    rdfs:comment "A canonical drug entity, identified by a normalised generic name (see README: Entity resolution)."@en .
+bp:Organization a owl:Class ; rdfs:label "Organization"@en ;
+    rdfs:comment "A trial lead sponsor after name normalisation (legal-form suffixes removed)."@en .
+bp:ClinicalTrial a owl:Class ; rdfs:label "Clinical trial"@en .
+bp:Condition a owl:Class ; rdfs:label "Condition"@en ;
+    rdfs:comment "A condition string as registered on ClinicalTrials.gov (case-folded, not terminology-mapped)."@en .
+bp:CancerType a owl:Class ; rdfs:label "Cancer type"@en ;
+    rdfs:comment "Node in a curated cancer-type hierarchy (TCGA-style study codes plus organ-system groups)."@en .
+bp:CellLine a owl:Class ; rdfs:label "Cell line"@en .
+bp:Target a owl:Class ; rdfs:label "Molecular target"@en ;
+    rdfs:comment "Target label as named by GDSC (usually, not always, an HGNC gene symbol)."@en .
+bp:AdverseEvent a owl:Class ; rdfs:label "Adverse event term"@en ;
+    rdfs:comment "A MedDRA preferred term as returned by openFDA FAERS counts."@en .
+bp:PharmClass a owl:Class ; rdfs:label "Pharmacologic class"@en .
+bp:DrugProduct a owl:Class ; rdfs:label "Drug product (NDC)"@en .
+bp:Publication a owl:Class ; rdfs:label "Publication"@en .
+bp:ExtractedAssertion a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:label "Extracted assertion"@en ;
+    rdfs:comment "A relation extracted from a publication abstract, with evidence sentence, extractor and (optional) confidence."@en .
+bp:Extractor a owl:Class ; rdfs:subClassOf prov:SoftwareAgent ; rdfs:label "Extractor"@en .
+
+# =============================================================== object properties
+bp:associatedWithCondition a owl:ObjectProperty ;
+    rdfs:label "associated with condition"@en ;
+    rdfs:comment "Super-property of every drug-condition link, whatever its evidence (trial registration or literature)."@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:Condition .
+bp:investigatedFor a owl:ObjectProperty ; rdfs:subPropertyOf bp:associatedWithCondition ;
+    rdfs:label "investigated for"@en ;
+    rdfs:comment "Drug is an intervention in at least one registered trial for the condition."@en .
+bp:extractedTreats a owl:ObjectProperty ; rdfs:subPropertyOf bp:associatedWithCondition ;
+    rdfs:label "extracted: treats"@en ;
+    rdfs:comment "Literature-extracted: an abstract states the drug treats / is active against the condition."@en .
+
+bp:associatedWithTarget a owl:ObjectProperty ; rdfs:label "associated with target"@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:Target .
+bp:hasTarget a owl:ObjectProperty ; rdfs:subPropertyOf bp:associatedWithTarget ;
+    rdfs:label "has putative target"@en .
+bp:extractedInhibits a owl:ObjectProperty ; rdfs:subPropertyOf bp:associatedWithTarget ;
+    rdfs:label "extracted: inhibits"@en .
+
+bp:associatedWithAdverseEvent a owl:ObjectProperty ; rdfs:label "associated with adverse event"@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:AdverseEvent .
+bp:hasReportedReaction a owl:ObjectProperty ; rdfs:subPropertyOf bp:associatedWithAdverseEvent ;
+    rdfs:label "has reported reaction"@en ;
+    rdfs:comment "The term occurs among the most frequent reactions in FAERS reports mentioning the drug. Report counts are not incidence rates and do not imply causality."@en .
+bp:extractedAdverseEffect a owl:ObjectProperty ; rdfs:subPropertyOf bp:associatedWithAdverseEvent ;
+    rdfs:label "extracted: adverse effect"@en .
+
+bp:sponsoredBy a owl:ObjectProperty ; rdfs:label "sponsored by"@en ;
+    rdfs:domain bp:ClinicalTrial ; rdfs:range bp:Organization ; owl:inverseOf bp:sponsors .
+bp:sponsors a owl:ObjectProperty ; rdfs:label "sponsors"@en .
+bp:investigatesDrug a owl:ObjectProperty ; rdfs:label "investigates drug"@en ;
+    rdfs:domain bp:ClinicalTrial ; rdfs:range bp:Drug ; owl:inverseOf bp:investigatedInTrial .
+bp:investigatedInTrial a owl:ObjectProperty ; rdfs:label "investigated in trial"@en .
+bp:studiesCondition a owl:ObjectProperty ; rdfs:label "studies condition"@en ;
+    rdfs:domain bp:ClinicalTrial ; rdfs:range bp:Condition .
+bp:investigatedBy a owl:ObjectProperty ; rdfs:label "investigated by (organization)"@en ;
+    rdfs:comment "The organization sponsors at least one registered trial of the drug."@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:Organization .
+
+bp:hasProduct a owl:ObjectProperty ; rdfs:label "has product"@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:DrugProduct ; owl:inverseOf bp:productOf .
+bp:productOf a owl:ObjectProperty ; rdfs:label "product of"@en .
+bp:hasPharmClass a owl:ObjectProperty ; rdfs:label "has pharmacologic class"@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:PharmClass .
+
+bp:sensitiveIn a owl:ObjectProperty ; rdfs:label "sensitive in (cell line)"@en ;
+    rdfs:comment "Within the GDSC2 screen the cell line is in the most sensitive quantile for this drug (relative to that drug's other cell lines; not a clinical response claim)."@en ;
+    rdfs:domain bp:Drug ; rdfs:range bp:CellLine .
+bp:cellLineOfType a owl:ObjectProperty ; rdfs:label "cell line of cancer type"@en ;
+    rdfs:domain bp:CellLine ; rdfs:range bp:CancerType .
+bp:relatedToCancerType a owl:ObjectProperty ; rdfs:label "related to cancer type"@en ;
+    rdfs:comment "Heuristic keyword mapping from a trial condition string to the curated cancer-type hierarchy."@en ;
+    rdfs:domain bp:Condition ; rdfs:range bp:CancerType .
+bp:broaderType a owl:ObjectProperty , owl:TransitiveProperty ; rdfs:label "has broader cancer type"@en ;
+    rdfs:domain bp:CancerType ; rdfs:range bp:CancerType ; owl:inverseOf bp:narrowerType .
+bp:narrowerType a owl:ObjectProperty ; rdfs:label "has narrower cancer type"@en .
+
+# provenance / extraction
+bp:assertionSubject a owl:ObjectProperty ; rdfs:domain bp:ExtractedAssertion ; rdfs:range bp:Drug ; rdfs:label "assertion subject"@en .
+bp:assertionObject a owl:ObjectProperty ; rdfs:domain bp:ExtractedAssertion ; rdfs:label "assertion object (linked)"@en .
+bp:derivedFromPublication a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasDerivedFrom ;
+    rdfs:domain bp:ExtractedAssertion ; rdfs:range bp:Publication ; rdfs:label "derived from publication"@en .
+bp:extractedBy a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasAttributedTo ;
+    rdfs:domain bp:ExtractedAssertion ; rdfs:range bp:Extractor ; rdfs:label "extracted by"@en .
+
+# =============================================================== datatype properties
+bp:nctId a owl:DatatypeProperty ; rdfs:domain bp:ClinicalTrial ; rdfs:range xsd:string ; rdfs:label "NCT identifier"@en .
+bp:startDate a owl:DatatypeProperty ; rdfs:domain bp:ClinicalTrial ; rdfs:range xsd:date ; rdfs:label "start date"@en ;
+    rdfs:comment "Month- or year-only registry dates are padded to the first day."@en .
+bp:phase a owl:DatatypeProperty ; rdfs:domain bp:ClinicalTrial ; rdfs:range xsd:string ; rdfs:label "phase"@en .
+bp:overallStatus a owl:DatatypeProperty ; rdfs:domain bp:ClinicalTrial ; rdfs:range xsd:string ; rdfs:label "overall status"@en .
+bp:cosmicId a owl:DatatypeProperty ; rdfs:domain bp:CellLine ; rdfs:range xsd:integer ; rdfs:label "COSMIC id"@en .
+bp:gdscDrugId a owl:DatatypeProperty ; rdfs:domain bp:Drug ; rdfs:range xsd:integer ; rdfs:label "GDSC drug id"@en .
+bp:pathwayName a owl:DatatypeProperty ; rdfs:domain bp:Drug ; rdfs:range xsd:string ; rdfs:label "GDSC target pathway"@en .
+bp:ndc a owl:DatatypeProperty ; rdfs:domain bp:DrugProduct ; rdfs:range xsd:string ; rdfs:label "product NDC"@en .
+bp:brandName a owl:DatatypeProperty ; rdfs:domain bp:DrugProduct ; rdfs:range xsd:string ; rdfs:label "brand name"@en .
+bp:genericName a owl:DatatypeProperty ; rdfs:domain bp:DrugProduct ; rdfs:range xsd:string ; rdfs:label "generic name"@en .
+bp:dosageForm a owl:DatatypeProperty ; rdfs:domain bp:DrugProduct ; rdfs:range xsd:string ; rdfs:label "dosage form"@en .
+bp:labelerName a owl:DatatypeProperty ; rdfs:domain bp:DrugProduct ; rdfs:range xsd:string ; rdfs:label "labeler"@en .
+bp:alias a owl:DatatypeProperty ; rdfs:domain bp:Drug ; rdfs:range xsd:string ; rdfs:label "alias"@en .
+bp:pmid a owl:DatatypeProperty ; rdfs:domain bp:Publication ; rdfs:range xsd:string ; rdfs:label "PubMed id"@en .
+bp:pubYear a owl:DatatypeProperty ; rdfs:domain bp:Publication ; rdfs:range xsd:integer ; rdfs:label "publication year"@en .
+bp:assertionPredicate a owl:DatatypeProperty ; rdfs:domain bp:ExtractedAssertion ; rdfs:range xsd:string ; rdfs:label "assertion predicate"@en .
+bp:assertionObjectText a owl:DatatypeProperty ; rdfs:domain bp:ExtractedAssertion ; rdfs:range xsd:string ; rdfs:label "assertion object text"@en .
+bp:evidenceText a owl:DatatypeProperty ; rdfs:domain bp:ExtractedAssertion ; rdfs:range xsd:string ; rdfs:label "evidence sentence"@en .
+bp:confidence a owl:DatatypeProperty ; rdfs:domain bp:ExtractedAssertion ; rdfs:range xsd:decimal ; rdfs:label "extractor-reported confidence (uncalibrated)"@en .
+bp:model a owl:DatatypeProperty ; rdfs:domain bp:Extractor ; rdfs:range xsd:string ; rdfs:label "model identifier"@en .
+
+bp:ReactionSummary a owl:Class ; rdfs:label "Reaction report summary"@en ;
+    rdfs:comment "Aggregate FAERS count of reports that mention the drug and list the reaction term. Not an incidence rate."@en .
+bp:summaryDrug a owl:ObjectProperty ; rdfs:domain bp:ReactionSummary ; rdfs:range bp:Drug ; rdfs:label "summary drug"@en .
+bp:summaryEvent a owl:ObjectProperty ; rdfs:domain bp:ReactionSummary ; rdfs:range bp:AdverseEvent ; rdfs:label "summary event"@en .
+bp:reportCount a owl:DatatypeProperty ; rdfs:domain bp:ReactionSummary ; rdfs:range xsd:integer ; rdfs:label "FAERS report count"@en .
+
+bp:DoseResponse a owl:Class ; rdfs:label "GDSC2 dose-response fit"@en ;
+    rdfs:comment "One fitted dose-response curve (drug x cell line). Materialised only if gdsc.materialize_all_responses is true."@en .
+bp:responseDrug a owl:ObjectProperty ; rdfs:domain bp:DoseResponse ; rdfs:range bp:Drug ; rdfs:label "response drug"@en .
+bp:responseCellLine a owl:ObjectProperty ; rdfs:domain bp:DoseResponse ; rdfs:range bp:CellLine ; rdfs:label "response cell line"@en .
+bp:lnIC50 a owl:DatatypeProperty ; rdfs:domain bp:DoseResponse ; rdfs:range xsd:decimal ; rdfs:label "ln(IC50)"@en .
+bp:auc a owl:DatatypeProperty ; rdfs:domain bp:DoseResponse ; rdfs:range xsd:decimal ; rdfs:label "AUC"@en .
+bp:zScore a owl:DatatypeProperty ; rdfs:domain bp:DoseResponse ; rdfs:range xsd:decimal ; rdfs:label "Z-score"@en .
+

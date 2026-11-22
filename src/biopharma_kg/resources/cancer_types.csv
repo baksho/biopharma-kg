@@ -1,0 +1,57 @@
+code,label,parent_code,kind
+CANCER,Cancer,,root
+LUNG,Lung cancer,CANCER,group
+BREAST,Breast cancer (group),CANCER,group
+GI,Gastrointestinal cancer,CANCER,group
+GYN,Gynecologic cancer,CANCER,group
+UROLOGIC,Urologic cancer,CANCER,group
+KIDNEY,Kidney cancer,UROLOGIC,group
+HEADNECK_ENDO,Head and neck / endocrine cancer,CANCER,group
+CNS,Central nervous system tumor,CANCER,group
+MELANOMA,Melanoma,CANCER,group
+HEMATOLOGIC,Hematologic malignancy,CANCER,group
+SARCOMA,Sarcoma (group),CANCER,group
+THORACIC_OTHER,Other thoracic cancer,CANCER,group
+PEDIATRIC,Pediatric solid tumor,CANCER,group
+LUAD,Lung adenocarcinoma,LUNG,tcga
+LUSC,Lung squamous cell carcinoma,LUNG,tcga
+SCLC,Small cell lung cancer,LUNG,gdsc
+BRCA,Breast invasive carcinoma,BREAST,tcga
+COAD,Colon adenocarcinoma,GI,tcga
+READ,Rectum adenocarcinoma,GI,tcga
+COAD_READ,Colorectal adenocarcinoma,GI,gdsc
+STAD,Stomach adenocarcinoma,GI,tcga
+ESCA,Esophageal carcinoma,GI,tcga
+LIHC,Liver hepatocellular carcinoma,GI,tcga
+CHOL,Cholangiocarcinoma,GI,tcga
+PAAD,Pancreatic adenocarcinoma,GI,tcga
+OV,Ovarian serous cystadenocarcinoma,GYN,tcga
+UCEC,Uterine corpus endometrial carcinoma,GYN,tcga
+UCS,Uterine carcinosarcoma,GYN,tcga
+CESC,Cervical squamous cell carcinoma,GYN,tcga
+BLCA,Bladder urothelial carcinoma,UROLOGIC,tcga
+PRAD,Prostate adenocarcinoma,UROLOGIC,tcga
+TGCT,Testicular germ cell tumor,UROLOGIC,tcga
+KIRC,Kidney renal clear cell carcinoma,KIDNEY,tcga
+KIRP,Kidney renal papillary cell carcinoma,KIDNEY,tcga
+KICH,Kidney chromophobe,KIDNEY,tcga
+HNSC,Head and neck squamous cell carcinoma,HEADNECK_ENDO,tcga
+THCA,Thyroid carcinoma,HEADNECK_ENDO,tcga
+ACC,Adrenocortical carcinoma,HEADNECK_ENDO,tcga
+PCPG,Pheochromocytoma and paraganglioma,HEADNECK_ENDO,tcga
+GBM,Glioblastoma multiforme,CNS,tcga
+LGG,Brain lower grade glioma,CNS,tcga
+MB,Medulloblastoma,CNS,gdsc
+SKCM,Skin cutaneous melanoma,MELANOMA,tcga
+UVM,Uveal melanoma,MELANOMA,tcga
+LAML,Acute myeloid leukemia,HEMATOLOGIC,tcga
+DLBC,Diffuse large B-cell lymphoma,HEMATOLOGIC,tcga
+ALL,Acute lymphoblastic leukemia,HEMATOLOGIC,gdsc
+CLL,Chronic lymphocytic leukemia,HEMATOLOGIC,gdsc
+LCML,Chronic myeloid leukemia,HEMATOLOGIC,gdsc
+MM,Multiple myeloma,HEMATOLOGIC,gdsc
+SARC,Sarcoma,SARCOMA,tcga
+MESO,Mesothelioma,THORACIC_OTHER,tcga
+THYM,Thymoma,THORACIC_OTHER,tcga
+NB,Neuroblastoma,PEDIATRIC,gdsc
+UNCLASSIFIED,Unclassified,CANCER,other

@@ -1,0 +1,383 @@
+{
+ "erlotinib_p1": {
+  "studies": [
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000001",
+      "briefTitle": "Erlotinib in NSCLC"
+     },
+     "statusModule": {
+      "overallStatus": "COMPLETED",
+      "startDateStruct": {
+       "date": "2008-03"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE3"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "Genentech, Inc."
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Non-Small Cell Lung Cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Erlotinib Hydrochloride 150 mg Tablets",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   },
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000002",
+      "briefTitle": "Erlotinib plus bevacizumab"
+     },
+     "statusModule": {
+      "overallStatus": "COMPLETED",
+      "startDateStruct": {
+       "date": "2011-05-14"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE2"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "Genentech"
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Non-Small Cell Lung Cancer",
+       "Lung Adenocarcinoma"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Erlotinib",
+        "type": "DRUG"
+       },
+       {
+        "name": "Bevacizumab",
+        "type": "BIOLOGICAL"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   },
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000003",
+      "briefTitle": "Erlotinib pancreatic"
+     },
+     "statusModule": {
+      "overallStatus": "TERMINATED",
+      "startDateStruct": {
+       "date": "2005"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE3"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "Hoffmann-La Roche AG"
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Pancreatic Cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Erlotinib",
+        "type": "DRUG"
+       },
+       {
+        "name": "Gemcitabine",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   }
+  ],
+  "nextPageToken": "tok2",
+  "totalCount": 5
+ },
+ "erlotinib_p2": {
+  "studies": [
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000004",
+      "briefTitle": "Erlotinib radiotherapy"
+     },
+     "statusModule": {
+      "overallStatus": "UNKNOWN",
+      "startDateStruct": {
+       "date": "2015-09"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE1",
+       "PHASE2"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "University Hospital Example"
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Glioblastoma"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Erlotinib",
+        "type": "DRUG"
+       },
+       {
+        "name": "Radiation therapy",
+        "type": "RADIATION"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   },
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000005",
+      "briefTitle": "Erlotinib no date"
+     },
+     "statusModule": {
+      "overallStatus": "WITHDRAWN"
+     },
+     "designModule": {
+      "phases": []
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "Genentech, Inc."
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Non-Small Cell Lung Cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Tarceva (erlotinib)",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   }
+  ],
+  "totalCount": 5
+ },
+ "gefitinib": {
+  "studies": [
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000006",
+      "briefTitle": "Gefitinib NSCLC"
+     },
+     "statusModule": {
+      "overallStatus": "COMPLETED",
+      "startDateStruct": {
+       "date": "2009-01"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE3"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "AstraZeneca"
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Non-small cell lung cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Gefitinib",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   },
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000007",
+      "briefTitle": "Gefitinib breast"
+     },
+     "statusModule": {
+      "overallStatus": "COMPLETED",
+      "startDateStruct": {
+       "date": "2012-06-01"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE2"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "AstraZeneca AB"
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Breast Cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Gefitinib",
+        "type": "DRUG"
+       },
+       {
+        "name": "Anastrozole",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   }
+  ],
+  "totalCount": 2
+ },
+ "cisplatin": {
+  "studies": [
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000008",
+      "briefTitle": "Cisplatin head and neck"
+     },
+     "statusModule": {
+      "overallStatus": "COMPLETED",
+      "startDateStruct": {
+       "date": "2010-02"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE3"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "National Cancer Institute (NCI)"
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Head and Neck Cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Cisplatin",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   },
+   {
+    "protocolSection": {
+     "identificationModule": {
+      "nctId": "NCT00000009",
+      "briefTitle": "Cisplatin lung"
+     },
+     "statusModule": {
+      "overallStatus": "COMPLETED",
+      "startDateStruct": {
+       "date": "2013-07"
+      }
+     },
+     "designModule": {
+      "phases": [
+       "PHASE3"
+      ]
+     },
+     "sponsorCollaboratorsModule": {
+      "leadSponsor": {
+       "name": "Pfizer Inc."
+      }
+     },
+     "conditionsModule": {
+      "conditions": [
+       "Lung Cancer",
+       "Non-Small Cell Lung Cancer"
+      ]
+     },
+     "armsInterventionsModule": {
+      "interventions": [
+       {
+        "name": "Cisplatin",
+        "type": "DRUG"
+       },
+       {
+        "name": "Pemetrexed",
+        "type": "DRUG"
+       }
+      ]
+     }
+    },
+    "hasResults": false
+   }
+  ],
+  "totalCount": 2
+ }
+}

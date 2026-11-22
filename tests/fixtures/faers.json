@@ -1,0 +1,36 @@
+{
+ "erlotinib": [
+  {
+   "term": "RASH",
+   "count": 1200
+  },
+  {
+   "term": "DIARRHOEA",
+   "count": 800
+  },
+  {
+   "term": "NAUSEA",
+   "count": 600
+  }
+ ],
+ "gefitinib": [
+  {
+   "term": "RASH",
+   "count": 400
+  },
+  {
+   "term": "DIARRHOEA",
+   "count": 300
+  }
+ ],
+ "cisplatin": [
+  {
+   "term": "NAUSEA",
+   "count": 900
+  },
+  {
+   "term": "NEUTROPENIA",
+   "count": 500
+  }
+ ]
+}

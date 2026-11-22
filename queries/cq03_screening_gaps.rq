@@ -1,0 +1,22 @@
+# title: Trialled but not screened (gap analysis)
+# question: Which drugs are in registered trials for a cancer-type group (directly, or via a narrower mapped type) but have NO sensitive GDSC2 cell line anywhere under that group?
+# inference: none
+SELECT ?drugLabel ?groupLabel (COUNT(DISTINCT ?trial) AS ?trials)
+WHERE {
+  ?trial bp:investigatesDrug ?drug ;
+         bp:studiesCondition ?cond .
+  ?cond bp:relatedToCancerType ?type .
+  ?type bp:broaderType* ?group .                           # the mapped type itself or any ancestor
+  ?group bp:broaderType ?root .
+  FILTER NOT EXISTS { ?root bp:broaderType ?top }          # keep organ-system groups only (parent = CANCER root)
+  ?drug rdfs:label ?drugLabel .
+  ?group rdfs:label ?groupLabel .
+  FILTER NOT EXISTS {
+    ?drug bp:sensitiveIn ?cl .
+    ?cl bp:cellLineOfType ?t .
+    ?t bp:broaderType* ?group .
+  }
+}
+GROUP BY ?drugLabel ?groupLabel
+ORDER BY DESC(?trials)
+LIMIT 200

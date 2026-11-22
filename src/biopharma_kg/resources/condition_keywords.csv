@@ -1,0 +1,40 @@
+pattern,code
+lung adenocarcinoma|adenocarcinoma of the lung,LUAD
+squamous.*lung|lung.*squamous,LUSC
+non.?small.?cell lung|nsclc,LUNG
+small.?cell lung|(?<![a-z])sclc(?![a-z]),SCLC
+lung (cancer|neoplasm|carcinoma|tumou?r),LUNG
+breast,BRCA
+colorectal|colon cancer|colon carcinoma|rectal,COAD_READ
+gastric|stomach|gastroesophageal|gastro-oesophageal,STAD
+esophag|oesophag,ESCA
+hepatocellular|liver cancer|liver cell carcinoma,LIHC
+cholangiocarcinoma|bile duct|biliary,CHOL
+pancrea,PAAD
+ovarian|ovary,OV
+endometri|uterine (cancer|carcinoma|neoplasm),UCEC
+cervical (cancer|carcinoma|neoplasm),CESC
+bladder|urothelial,BLCA
+renal cell|kidney (cancer|carcinoma|neoplasm),KIDNEY
+prostat,PRAD
+testicular|germ cell,TGCT
+head and neck|head & neck|oropharyn|laryn|nasopharyn,HNSC
+thyroid,THCA
+adrenocortical,ACC
+pheochromocytoma|paraganglioma,PCPG
+glioblastoma,GBM
+glioma|astrocytoma|oligodendroglioma,CNS
+medulloblastoma,MB
+neuroblastoma,NB
+uveal melanoma,UVM
+melanoma,SKCM
+acute myeloid|acute myelogenous|(?<![a-z])aml(?![a-z]),LAML
+acute lymphoblastic|acute lymphocytic|(?<![a-z])all(?![a-z]) leukemia,ALL
+chronic lymphocytic,CLL
+chronic myeloid|chronic myelogenous|(?<![a-z])cml(?![a-z]),LCML
+multiple myeloma,MM
+diffuse large b,DLBC
+lymphoma|leukemia|leukaemia|myelodysplastic|hematologic|haematologic,HEMATOLOGIC
+sarcoma,SARC
+mesothelioma,MESO
+thymoma|thymic,THYM

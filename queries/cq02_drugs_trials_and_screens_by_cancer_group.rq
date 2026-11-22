@@ -1,0 +1,19 @@
+# title: Cancer-type groups where a drug is both trialled and screened
+# question: For which (drug, cancer-type group) pairs does the drug have sensitive GDSC2 cell lines whose cancer type lies under the group AND at least one registered trial for a condition mapped to that group?
+# inference: compare
+# Written WITHOUT a property path on purpose: it needs bp:broaderType to be transitive, which only
+# holds after OWL-RL materialisation. Compare the row counts with and without inference.
+SELECT ?drugLabel ?groupLabel (COUNT(DISTINCT ?cellLine) AS ?sensitiveCellLines) (COUNT(DISTINCT ?trial) AS ?trials)
+WHERE {
+  ?drug bp:sensitiveIn ?cellLine .
+  ?cellLine bp:cellLineOfType ?type .
+  ?type bp:broaderType ?group .
+  ?trial bp:investigatesDrug ?drug ;
+         bp:studiesCondition ?cond .
+  ?cond bp:relatedToCancerType ?group .
+  ?drug rdfs:label ?drugLabel .
+  ?group rdfs:label ?groupLabel .
+}
+GROUP BY ?drugLabel ?groupLabel
+ORDER BY DESC(?trials) ?drugLabel
+LIMIT 500

@@ -1,0 +1,28 @@
+# Canonical drugs (output of the entity-resolution step), their aliases and GDSC putative targets.
+# Graph: <.../graph/resolution>
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/drugs#> .
+
+map:Drug a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT drug_key, label, gdsc_drug_id, pathway_name FROM drug" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ; rr:class bp:Drug ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/resolution> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "label" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:gdscDrugId ; rr:objectMap [ rr:column "gdsc_drug_id" ; rr:datatype xsd:integer ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:pathwayName ; rr:objectMap [ rr:column "pathway_name" ] ] .
+
+map:DrugAlias a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT DISTINCT drug_key, alias_raw FROM drug_alias WHERE alias_raw IS NOT NULL" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/resolution> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:alias ; rr:objectMap [ rr:column "alias_raw" ] ] .
+
+map:DrugTarget a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT drug_key, target_symbol FROM drug_target" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/gdsc> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:hasTarget ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/target/{target_symbol}" ] ] .

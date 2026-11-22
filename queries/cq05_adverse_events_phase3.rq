@@ -1,0 +1,15 @@
+# title: Most frequently reported reactions for drugs in Phase 3 trials
+# question: For drugs that appear in at least one Phase 3 trial, which reaction terms have the highest FAERS report counts? (raw counts, not incidence)
+# inference: none
+SELECT ?drugLabel ?eventLabel ?reports
+WHERE {
+  ?summary a bp:ReactionSummary ;
+           bp:summaryDrug ?drug ;
+           bp:summaryEvent ?event ;
+           bp:reportCount ?reports .
+  ?drug rdfs:label ?drugLabel .
+  ?event rdfs:label ?eventLabel .
+  FILTER EXISTS { ?trial bp:investigatesDrug ?drug ; bp:phase ?ph . FILTER(CONTAINS(?ph, "PHASE3")) }
+}
+ORDER BY DESC(?reports)
+LIMIT 200

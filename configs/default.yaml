@@ -1,0 +1,71 @@
+# Default configuration. Every key can be overridden with:  biopharma-kg --config my.yaml <command>
+# Paths are relative to the directory you run the command from (the repo root).
+
+paths:
+  data_dir: data            # raw downloads, cache, SQLite DB, KG files (git-ignored)
+  reports_dir: reports      # validation reports, query results, ML metrics
+
+seed:
+  # Drugs are discovered from GDSC2 when a GDSC2 file is available.
+  # Otherwise (or in addition) the plain-text list below is used.
+  drug_list: configs/seed_drugs.txt
+  max_drugs: 60             # cap on seed drugs queried against the live APIs (null = all)
+  use_gdsc_drugs: true      # prefer GDSC2 drug names as seeds when the file is present
+
+gdsc:
+  required: true            # fail `fetch` if GDSC2 cannot be obtained (set false to run without drug-sensitivity data)
+  file: null                # path to a GDSC2 fitted dose response file (.xlsx or .csv); if null, data/raw/gdsc/ is searched
+  # Best-effort auto-download. The release-8.5 directory exists, but the exact file name/date below is UNVERIFIED.
+  # If it fails you get manual-download instructions: put the GDSC2 fitted dose response .xlsx/.csv in data/raw/gdsc/.
+  url: https://cog.sanger.ac.uk/cancerrxgene/GDSC_release8.5/GDSC2_fitted_dose_response_27Oct23.xlsx
+  sensitive_quantile: 0.25  # a (drug, cell line) pair counts as "sensitive" if LN_IC50 is in the lowest 25% for that drug
+  materialize_all_responses: false   # true => one RDF node per dose-response row (~hundreds of thousands of triples)
+
+ctgov:
+  base_url: https://clinicaltrials.gov/api/v2
+  page_size: 100            # API allows up to 1000
+  max_studies_per_drug: 100
+
+openfda:
+  base_url: https://api.fda.gov
+  ndc_limit_per_drug: 50
+  faers_top_reactions: 25
+  api_key_env: OPENFDA_API_KEY   # optional; raises rate limits
+
+pubmed:
+  base_url: https://eutils.ncbi.nlm.nih.gov/entrez/eutils
+  max_abstracts_per_drug: 15
+  query_suffix: "AND (cancer OR neoplasm OR tumor OR carcinoma OR leukemia OR lymphoma)"
+  api_key_env: NCBI_API_KEY      # optional: 10 req/s instead of 3 req/s
+  email_env: NCBI_EMAIL          # optional but recommended by NCBI
+
+http:
+  timeout_s: 60
+  max_retries: 5
+  backoff_s: 2.0
+  user_agent: "biopharma-kg/0.1 (research project; set NCBI_EMAIL env var)"
+
+extraction:
+  backend: auto             # auto | llm | rules | both.  auto = llm if ANTHROPIC_API_KEY is set and the SDK is installed, else rules
+  model: claude-sonnet-5-5  # Anthropic model id used by the llm backend
+  max_tokens: 1500
+  min_condition_frequency: 2  # a trial condition must occur this often to be used as a dictionary term by the rules backend
+
+kg:
+  base_iri: "https://biopharma-kg.example/"
+  # OWL-RL runs on resource triples only and is skipped (with a warning) above this count. Measured in the dev sandbox
+  # (scripts/scale_check.py, synthetic data): ~0.5 ms and ~4.5 KB per triple, linear: 98k triples -> 53 s, 0.6 GB peak.
+  reasoning_max_triples: 250000
+
+ml:
+  seeds: [0, 1, 2]
+  embedding_dim: 64
+  epochs: 100               # PyKEEN epochs
+  lr: 0.01                  # PyKEEN Adam lr; set from a mechanics test on a synthetic graph, NOT tuned on real data
+  gnn_epochs: 200
+  batch_size: 512
+  models: [TransE, RotatE, ComplEx]   # PyKEEN models; at least one is required
+  gnn: true                 # also train the PyG R-GCN link predictor
+  tasks: [drug_condition, drug_sensitivity, drug_adverse_event]
+  temporal_test_fraction: 0.2     # drug_condition: newest 20% of (drug, condition) first-seen dates are test
+  device: cpu

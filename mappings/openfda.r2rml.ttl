@@ -1,0 +1,43 @@
+# openFDA: NDC drug products (+ pharmacologic classes) and FAERS reaction-count summaries.
+# Graphs: <.../graph/openfda-ndc>, <.../graph/openfda-faers>
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/openfda#> .
+
+map:Product a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT product_ndc, brand_name, generic_name, dosage_form, labeler, drug_key
+                                   FROM ndc_product WHERE drug_key IS NOT NULL""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/product/{product_ndc}" ; rr:class bp:DrugProduct ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/openfda-ndc> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:ndc ; rr:objectMap [ rr:column "product_ndc" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:brandName ; rr:objectMap [ rr:column "brand_name" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:genericName ; rr:objectMap [ rr:column "generic_name" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:dosageForm ; rr:objectMap [ rr:column "dosage_form" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:labelerName ; rr:objectMap [ rr:column "labeler" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:productOf ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ] ] .
+
+map:DrugPharmClass a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "v_drug_pharm_class" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/openfda-ndc> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:hasPharmClass ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/pharmclass/{class_key}" ] ] .
+
+map:DrugReaction a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "v_drug_ae" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/openfda-faers> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:hasReportedReaction ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/ae/{ae_key}" ] ] .
+
+map:ReactionSummary a rr:TriplesMap ;
+  rr:logicalTable [ rr:tableName "v_drug_ae" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/reaction/{drug_key}__{ae_key}" ; rr:class bp:ReactionSummary ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/openfda-faers> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:summaryDrug ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/drug/{drug_key}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:summaryEvent ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/ae/{ae_key}" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:reportCount ; rr:objectMap [ rr:column "report_count" ; rr:datatype xsd:integer ] ] .

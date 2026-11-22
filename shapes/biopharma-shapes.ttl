@@ -1,0 +1,79 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix bps:  <https://biopharma-kg.example/shapes#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+
+# Severity policy: sh:Violation = structural integrity the pipeline guarantees by construction;
+# sh:Warning = format expectations that real registry data may legitimately break.
+
+bps:DrugShape a sh:NodeShape ;
+    sh:targetClass bp:Drug ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ; sh:datatype xsd:string ;
+                  sh:message "Every drug needs a label." ] ;
+    sh:property [ sh:path bp:gdscDrugId ; sh:datatype xsd:integer ; sh:maxCount 1 ] .
+
+bps:TrialShape a sh:NodeShape ;
+    sh:targetClass bp:ClinicalTrial ;
+    sh:property [ sh:path bp:nctId ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ;
+                  sh:pattern "^NCT[0-9]{8}$" ; sh:message "nctId must look like NCT followed by 8 digits." ] ;
+    sh:property [ sh:path bp:investigatesDrug ; sh:minCount 1 ; sh:class bp:Drug ;
+                  sh:message "Every trial in the graph must investigate at least one canonical drug." ] ;
+    sh:property [ sh:path bp:startDate ; sh:maxCount 1 ; sh:datatype xsd:date ] ;
+    sh:property [ sh:path bp:sponsoredBy ; sh:maxCount 1 ; sh:class bp:Organization ] ;
+    sh:property [ sh:path bp:studiesCondition ; sh:severity sh:Warning ; sh:minCount 1 ;
+                  sh:message "Trial has no registered condition." ] .
+
+bps:OrganizationShape a sh:NodeShape ;
+    sh:targetClass bp:Organization ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ; sh:datatype xsd:string ] .
+
+bps:ConditionShape a sh:NodeShape ;
+    sh:targetClass bp:Condition ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ; sh:datatype xsd:string ] ;
+    sh:property [ sh:path bp:relatedToCancerType ; sh:class bp:CancerType ] .
+
+bps:CancerTypeShape a sh:NodeShape ;
+    sh:targetClass bp:CancerType ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ] ;
+    sh:property [ sh:path bp:broaderType ; sh:maxCount 1 ; sh:class bp:CancerType ;
+                  sh:message "A cancer type has at most one direct parent." ] .
+
+bps:CellLineShape a sh:NodeShape ;
+    sh:targetClass bp:CellLine ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ] ;
+    sh:property [ sh:path bp:cosmicId ; sh:maxCount 1 ; sh:datatype xsd:integer ] ;
+    sh:property [ sh:path bp:cellLineOfType ; sh:maxCount 1 ; sh:class bp:CancerType ;
+                  sh:severity sh:Warning ; sh:minCount 1 ;
+                  sh:message "Cell line has no cancer type annotation." ] .
+
+bps:ProductShape a sh:NodeShape ;
+    sh:targetClass bp:DrugProduct ;
+    sh:property [ sh:path bp:ndc ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:pattern "^[0-9]{4,5}-[0-9]{3,4}$" ; sh:severity sh:Warning ;
+                  sh:message "Product NDC does not match the labeler-product pattern (4-4, 5-3 or 5-4 digits)." ] ;
+    sh:property [ sh:path bp:productOf ; sh:minCount 1 ; sh:class bp:Drug ] .
+
+bps:ReactionSummaryShape a sh:NodeShape ;
+    sh:targetClass bp:ReactionSummary ;
+    sh:property [ sh:path bp:summaryDrug ; sh:minCount 1 ; sh:maxCount 1 ; sh:class bp:Drug ] ;
+    sh:property [ sh:path bp:summaryEvent ; sh:minCount 1 ; sh:maxCount 1 ; sh:class bp:AdverseEvent ] ;
+    sh:property [ sh:path bp:reportCount ; sh:minCount 1 ; sh:datatype xsd:integer ; sh:minInclusive 1 ] .
+
+bps:PublicationShape a sh:NodeShape ;
+    sh:targetClass bp:Publication ;
+    sh:property [ sh:path bp:pmid ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9]+$" ] .
+
+bps:AssertionShape a sh:NodeShape ;
+    sh:targetClass bp:ExtractedAssertion ;
+    sh:property [ sh:path bp:assertionSubject ; sh:minCount 1 ; sh:maxCount 1 ; sh:class bp:Drug ] ;
+    sh:property [ sh:path bp:assertionPredicate ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( "treats" "adverse_effect" "inhibits" ) ] ;
+    sh:property [ sh:path bp:evidenceText ; sh:minCount 1 ; sh:minLength 10 ;
+                  sh:message "Every extracted assertion must carry its evidence sentence." ] ;
+    sh:property [ sh:path bp:derivedFromPublication ; sh:minCount 1 ; sh:class bp:Publication ;
+                  sh:message "Every extracted assertion must be traceable to a publication." ] ;
+    sh:property [ sh:path bp:extractedBy ; sh:minCount 1 ; sh:class bp:Extractor ] ;
+    sh:property [ sh:path bp:confidence ; sh:maxCount 1 ; sh:minInclusive 0 ; sh:maxInclusive 1 ] .

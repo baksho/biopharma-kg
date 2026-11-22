@@ -1,0 +1,57 @@
+# Reference / master-data entities: cancer-type hierarchy, conditions, targets, adverse-event terms,
+# pharmacologic classes, organizations. Graph: <.../graph/reference>
+@prefix rr:   <http://www.w3.org/ns/r2rml#> .
+@prefix bp:   <https://biopharma-kg.example/ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix map:  <https://biopharma-kg.example/mapping/reference#> .
+
+map:CancerType a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT code, label, parent_code FROM cancer_type" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/cancertype/{code}" ; rr:class bp:CancerType ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "label" ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:broaderType ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/cancertype/{parent_code}" ] ] .
+
+map:Condition a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT condition_key, label FROM condition
+      WHERE condition_key IN (SELECT condition_key FROM v_drug_condition)
+         OR condition_key IN (SELECT object_key FROM extracted_relation WHERE object_kind='condition' AND object_key IS NOT NULL)""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/condition/{condition_key}" ; rr:class bp:Condition ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "label" ] ] .
+
+map:ConditionCancerType a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT cc.condition_key, cc.code FROM condition_cancer_type cc
+      WHERE cc.condition_key IN (SELECT condition_key FROM v_drug_condition)
+         OR cc.condition_key IN (SELECT object_key FROM extracted_relation WHERE object_kind='condition' AND object_key IS NOT NULL)""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/condition/{condition_key}" ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate bp:relatedToCancerType ;
+                          rr:objectMap [ rr:template "https://biopharma-kg.example/id/cancertype/{code}" ] ] .
+
+map:Target a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT symbol FROM target" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/target/{symbol}" ; rr:class bp:Target ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "symbol" ] ] .
+
+map:AdverseEvent a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery """SELECT ae_key, term FROM adverse_event
+      WHERE ae_key IN (SELECT ae_key FROM faers_reaction)
+         OR ae_key IN (SELECT object_key FROM extracted_relation WHERE object_kind='adverse_event' AND object_key IS NOT NULL)""" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/ae/{ae_key}" ; rr:class bp:AdverseEvent ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "term" ] ] .
+
+map:PharmClass a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT class_key, label FROM pharm_class WHERE class_key IN (SELECT class_key FROM v_drug_pharm_class)" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/pharmclass/{class_key}" ; rr:class bp:PharmClass ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "label" ] ] .
+
+map:Organization a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT org_key, label FROM organization WHERE org_key IN (SELECT org_key FROM v_drug_org)" ] ;
+  rr:subjectMap [ rr:template "https://biopharma-kg.example/id/org/{org_key}" ; rr:class bp:Organization ;
+                  rr:graphMap [ rr:constant <https://biopharma-kg.example/graph/reference> ] ] ;
+  rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "label" ] ] .
